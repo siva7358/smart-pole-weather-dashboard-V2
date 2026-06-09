@@ -1,0 +1,479 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Puducherry Weather Dashboard</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@600;700;800;900&display=swap" rel="stylesheet">
+
+<style>
+
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+}
+
+body{
+    width:100vw;
+    height:100vh;
+    overflow:hidden;
+    font-family:'Montserrat',sans-serif;
+    color:white;
+
+    background:
+    linear-gradient(
+    135deg,
+    #074100,
+    #030041,
+    #074100
+    );
+}
+
+.container{
+    width:100%;
+    height:100%;
+    display:flex;
+    flex-direction:column;
+}
+
+/* ========================= */
+/* TOP 25% TIME & DATE       */
+/* ========================= */
+
+.topPanel{
+
+    height:35%;
+
+    display:flex;
+    flex-direction:column;
+
+    justify-content:center;
+    align-items:center;
+
+    background:rgba(255,255,255,.05);
+
+    backdrop-filter:blur(15px);
+
+    border-bottom:
+    1px solid rgba(255,255,255,.15);
+}
+
+#clock{
+
+    font-size:18vw;
+
+    font-weight:900;
+
+    line-height:1;
+
+    text-shadow:
+    0 0 20px rgba(255,255,255,.35);
+}
+
+#day{
+
+    font-size:14vw;
+
+    font-weight:700;
+}
+
+#date{
+
+    font-size:10vw;
+
+    font-weight:600;
+}
+
+/* ========================= */
+/* BOTTOM 75% WEATHER        */
+/* ========================= */
+
+.weatherPanel{
+
+    height:75%;
+
+    padding:8px;
+}
+
+.weatherCard{
+
+    width:100%;
+
+    height:100%;
+
+    display:flex;
+
+    flex-direction:column;
+
+    justify-content:center;
+
+    align-items:center;
+
+    text-align:center;
+
+    border-radius 0px;
+
+    background:
+    rgba(255,255,255,.12);
+
+    backdrop-filter:blur(38px);
+
+    border:
+    1px solid rgba(255,255,255,.15);
+
+    box-shadow:
+    0 17px 60px rgba(0,0,0,.35);
+}
+
+#slideTitle{
+
+    font-size:11vw;
+
+    font-weight:600;
+
+    text-transform:uppercase;
+
+    letter-spacing:3px;
+
+    margin-bottom:17px;
+}
+
+#slideValue{
+
+    font-size:29vw;
+
+    font-weight:800;
+
+    line-height:.9;
+
+    text-shadow:
+    0 0 15px rgba(255,255,255,.45),
+    0 0 35px rgba(255,255,255,.25);
+}
+
+#slideDesc{
+
+    font-size:12vw;
+
+    font-weight:600;
+
+    margin-top:25px;
+
+    padding:20px;
+}
+
+.fade{
+    animation:fade 1s ease;
+}
+
+@keyframes fade{
+    from{
+        opacity:0;
+        transform:translateXY(30px);
+    }
+    to{
+        opacity:1;
+        transform:translateXY(0);
+    }
+}
+
+</style>
+</head>
+
+<body>
+
+<div class="container">
+
+    <!-- TOP 25% -->
+
+    <div class="topPanel">
+
+        <div id="clock">
+            --:--
+        </div>
+
+        <div id="day">
+            Loading...
+        </div>
+
+        <div id="date">
+            Loading...
+        </div>
+
+    </div>
+
+    <!-- BOTTOM 75% -->
+
+    <div class="weatherPanel">
+
+        <div class="weatherCard fade" id="weatherCard">
+
+            <div id="slideTitle">
+                Loading...
+            </div>
+
+            <div id="slideValue">
+                --
+            </div>
+
+            <div id="slideDesc">
+                Fetching Weather...
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+<script>
+
+const apiKey = "3e7057db50b0f5232d0d5fae6b9bec8f";
+const city = "Puducherry";
+
+let slides = [];
+let slideIndex = 0;
+
+/* ========================= */
+/* CLOCK                     */
+/* ========================= */
+
+function updateClock(){
+
+    const now = new Date();
+
+    document.getElementById("clock").innerText =
+    now.toLocaleTimeString('en-US',{
+        hour:'2-digit',
+        minute:'2-digit',
+        hour12:true
+    });
+
+    document.getElementById("day").innerText =
+    now.toLocaleDateString('en-US',{
+        weekday:'long'
+    });
+
+    document.getElementById("date").innerText =
+    now.toLocaleDateString('en-US',{
+        day:'2-digit',
+        month:'long',
+        year:'numeric'
+    });
+}
+
+/* ========================= */
+/* AQI STATUS                */
+/* ========================= */
+
+function getHealthAdvice(aqi){
+
+    switch(aqi){
+
+        case 1:
+        return "Good Air Quality";
+
+        case 2:
+        return "Fair Air Quality";
+
+        case 3:
+        return "Moderate Air Quality";
+
+        case 4:
+        return "Poor Air Quality";
+
+        case 5:
+        return "Very Poor Air Quality";
+
+        default:
+        return "";
+    }
+}
+
+/* ========================= */
+/* SLIDE ROTATION            */
+/* ========================= */
+
+function rotateSlides(){
+
+    if(slides.length===0) return;
+
+    const slide = slides[slideIndex];
+
+    const card =
+    document.getElementById("weatherCard");
+
+    card.classList.remove("fade");
+    void card.offsetWidth;
+    card.classList.add("fade");
+
+    document.getElementById("slideTitle")
+    .innerText = slide.title;
+
+    document.getElementById("slideValue")
+    .innerText = slide.value;
+
+    document.getElementById("slideDesc")
+    .innerText = slide.desc;
+
+    slideIndex++;
+
+    if(slideIndex >= slides.length){
+
+        slideIndex = 0;
+    }
+}
+
+/* ========================= */
+/* WEATHER API               */
+/* ========================= */
+
+async function getWeather(){
+
+    try{
+
+        const res =
+        await fetch(
+        `https://api.openweathermap.org/data/2.5/weather?q=${city}&units=metric&appid=${apiKey}`
+        );
+
+        const data =
+        await res.json();
+
+        const temp =
+        Math.round(data.main.temp);
+
+        const humidity =
+        data.main.humidity;
+
+        const wind =
+        Math.round(data.wind.speed);
+
+        const visibility =
+        (data.visibility/1000).toFixed(1);
+
+        const lat =
+        data.coord.lat;
+
+        const lon =
+        data.coord.lon;
+
+        const aqiRes =
+        await fetch(
+        `https://api.openweathermap.org/data/2.5/air_pollution?lat=${lat}&lon=${lon}&appid=${apiKey}`
+        );
+
+        const aqiData =
+        await aqiRes.json();
+
+        const aqi =
+        aqiData.list[0].main.aqi;
+
+        const sunrise =
+        new Date(
+        data.sys.sunrise * 1000
+        ).toLocaleTimeString(
+        'en-US',
+        {
+            hour:'2-digit',
+            minute:'2-digit',
+            hour12:true
+        });
+
+        const sunset =
+        new Date(
+        data.sys.sunset * 1000
+        ).toLocaleTimeString(
+        'en-US',
+        {
+            hour:'2-digit',
+            minute:'2-digit',
+            hour12:true
+        });
+
+        slides = [
+
+            {
+                title:"TEMPERATURE",
+                value:temp + "°C",
+                desc:data.weather[0].description
+            },
+
+            {
+                title:"AIR QUALITY",
+                value:"AQI " + aqi,
+                desc:getHealthAdvice(aqi)
+            },
+
+            {
+                title:"HUMIDITY",
+                value:humidity + "%",
+                desc:"Relative Humidity"
+            },
+
+            {
+                title:"WIND SPEED",
+                value:wind + " km/h",
+                desc:"Current Wind"
+            },
+
+            {
+                title:"VISIBILITY",
+                value:visibility + " km",
+                desc:"Visibility Range"
+            },
+
+            {
+                title:"SUNRISE",
+                value:sunrise,
+                desc:"Today's Sunrise"
+            },
+
+            {
+                title:"SUNSET",
+                value:sunset,
+                desc:"Today's Sunset"
+            }
+
+        ];
+
+        rotateSlides();
+
+    }
+    catch(error){
+
+        console.log(
+        "Weather Error:",
+        error
+        );
+    }
+}
+
+/* ========================= */
+/* START                     */
+/* ========================= */
+
+updateClock();
+getWeather();
+
+setInterval(
+updateClock,
+1000
+);
+
+setInterval(
+rotateSlides,
+5000
+);
+
+setInterval(
+getWeather,
+60000
+);
+
+</script>
+
+</body>
+</html>
