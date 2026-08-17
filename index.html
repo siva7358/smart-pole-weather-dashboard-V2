@@ -2,10 +2,9 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Puducherry · Air Quality Monitor</title>
+<meta name="viewport" content="width=96, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>96x192 · AQI</title>
 
-<link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Roboto+Mono:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
 
 <style>
@@ -13,153 +12,149 @@
 :root{
   --bg:#05080A;
   --bg2:#0A1113;
-  --panel:#0A1315;
   --line:rgba(45,212,191,.22);
   --line-dim:rgba(255,255,255,.06);
-  --grid:rgba(255,255,255,.028);
   --text:#EAF3F0;
   --text-dim:#9CB8B3;
   --text-dimmer:#6E8985;
   --cyan:#2DD4BF;
   --amber:#FFB300;
-
   --c-good:#34D399;
   --c-moderate:#FDE047;
   --c-sensitive:#FB923C;
   --c-unhealthy:#F87171;
   --c-very:#C084FC;
   --c-hazard:#EF4444;
-
   --accent: var(--c-good);
 }
 
 *{margin:0;padding:0;box-sizing:border-box;}
 
 html,body{
-  width:100%;
-  height:100%;
+  width:96px;
+  height:192px;
   overflow:hidden;
   background:
-    repeating-linear-gradient(0deg, var(--grid) 0px, var(--grid) 1px, transparent 1px, transparent 42px),
-    repeating-linear-gradient(90deg, var(--grid) 0px, var(--grid) 1px, transparent 1px, transparent 42px),
+    repeating-linear-gradient(0deg, rgba(255,255,255,.028) 0px, rgba(255,255,255,.028) 1px, transparent 1px, transparent 12px),
+    repeating-linear-gradient(90deg, rgba(255,255,255,.028) 0px, rgba(255,255,255,.028) 1px, transparent 1px, transparent 12px),
     radial-gradient(ellipse 90% 60% at 50% 0%, rgba(45,212,191,.05), transparent 60%),
     linear-gradient(160deg, var(--bg), var(--bg2) 55%, var(--bg));
   color:var(--text);
   font-family:'Roboto Mono',monospace;
+  image-rendering:crisp-edges;
 }
 
 .stage{
-  width:100vw;
-  height:100vh;
+  width:96px;
+  height:192px;
   display:flex;
   flex-direction:column;
-  padding:clamp(18px,2.2vw,40px);
-  gap:clamp(14px,1.8vh,30px);
+  padding:2px 3px;
+  gap:2px;
 }
 
 /* ============ HEADER ============ */
 
 .header{
   display:flex;
-  align-items:flex-end;
-  justify-content:space-between;
-  padding-bottom:clamp(12px,1.6vh,22px);
+  flex-direction:column;
+  padding-bottom:1px;
   border-bottom:1px solid var(--line);
   flex-shrink:0;
+  height:28px;
 }
 
 .brand{
   display:flex;
   flex-direction:column;
-  gap:6px;
+  gap:0px;
 }
 
 .brand .stnRow{
   display:flex;
   align-items:center;
-  gap:14px;
+  gap:4px;
 }
 
 .brand .stnId{
   font-family:'Roboto Mono',monospace;
   font-weight:700;
-  font-size:clamp(15px,1.1vw,20px);
-  letter-spacing:.18em;
+  font-size:5px;
+  letter-spacing:.12em;
   color:var(--cyan);
   border:1px solid var(--line);
-  padding:5px 12px;
+  padding:1px 3px;
+  line-height:8px;
 }
 
 .brand .coords{
   font-family:'Roboto Mono',monospace;
-  font-size:clamp(14px,1vw,19px);
-  letter-spacing:.1em;
+  font-size:4px;
+  letter-spacing:.06em;
   color:var(--text-dimmer);
 }
 
 .brand .city{
   font-family:'Space Grotesk',sans-serif;
   font-weight:700;
-  font-size:clamp(50px,5.4vw,99px);
+  font-size:11px;
   letter-spacing:-.01em;
-  line-height:1;
+  line-height:1.1;
+  margin-top:-1px;
 }
 
-.brand .eyebrow{
-  font-family:'Roboto Mono',monospace;
-  font-weight:500;
-  font-size:clamp(19px,1.6vw,32px);
-  letter-spacing:.34em;
-  color:var(--text-dim);
-  text-transform:uppercase;
+.status-clock{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  margin-top:0px;
 }
 
 .status{
   display:flex;
   align-items:center;
-  gap:14px;
+  gap:3px;
   font-family:'Roboto Mono',monospace;
   font-weight:600;
-  font-size:clamp(19px,1.5vw,29px);
+  font-size:4.5px;
   color:var(--text-dim);
-  letter-spacing:.14em;
+  letter-spacing:.08em;
   text-transform:uppercase;
 }
 
 .status .dot{
-  width:14px;height:14px;
+  width:5px;
+  height:5px;
   background:var(--accent);
-  box-shadow:0 0 14px var(--accent);
+  box-shadow:0 0 5px var(--accent);
   transition:background .6s ease, box-shadow .6s ease;
 }
-.status.offline .dot{background:var(--text-dimmer);box-shadow:none;animation:blink 1s infinite;}
-@keyframes blink{50%{opacity:.2;}}
 
-.clockblock{
-  text-align:right;
+.status.offline .dot{
+  background:var(--text-dimmer);
+  box-shadow:none;
+  animation:blink 1s infinite;
 }
+
+@keyframes blink{
+  50%{opacity:.2;}
+}
+
 #clock{
   font-family:'Roboto Mono',monospace;
   font-weight:700;
-  font-size:clamp(54px,5.7vw,108px);
+  font-size:9px;
   line-height:1;
   letter-spacing:-.01em;
-}
-#datestr{
-  font-family:'Roboto Mono',monospace;
-  font-size:clamp(18px,1.6vw,32px);
-  color:var(--text-dim);
-  letter-spacing:.1em;
-  margin-top:6px;
 }
 
 /* ============ HERO ============ */
 
 .hero{
   flex:1;
-  display:grid;
-  grid-template-columns:1.1fr 1fr;
-  gap:clamp(16px,2vw,36px);
+  display:flex;
+  flex-direction:column;
+  gap:2px;
   min-height:0;
 }
 
@@ -170,22 +165,23 @@ html,body{
   overflow:hidden;
 }
 
-/* corner brackets — signature framing element */
 .panel::before, .panel::after,
 .panel .brkA, .panel .brkB{
   content:"";
   position:absolute;
-  width:26px; height:26px;
+  width:8px;
+  height:8px;
   border-color:var(--cyan);
   border-style:solid;
-  opacity:.55;
+  opacity:.35;
   z-index:2;
   pointer-events:none;
 }
-.panel::before{ top:-1px; left:-1px; border-width:2px 0 0 2px; }
-.panel::after{ bottom:-1px; right:-1px; border-width:0 2px 2px 0; }
-.panel .brkA{ top:-1px; right:-1px; border-width:2px 2px 0 0; }
-.panel .brkB{ bottom:-1px; left:-1px; border-width:0 0 2px 2px; }
+
+.panel::before{ top:-1px; left:-1px; border-width:1px 0 0 1px; }
+.panel::after{ bottom:-1px; right:-1px; border-width:0 1px 1px 0; }
+.panel .brkA{ top:-1px; right:-1px; border-width:1px 1px 0 0; }
+.panel .brkB{ bottom:-1px; left:-1px; border-width:0 0 1px 1px; }
 
 /* ---- gauge panel ---- */
 
@@ -194,36 +190,34 @@ html,body{
   flex-direction:column;
   align-items:center;
   justify-content:center;
-  gap:clamp(4px,1vh,14px);
-  padding:clamp(10px,2vh,30px);
-}
-
-.gaugeGlow{
-  position:absolute;
-  inset:-20%;
-  background:radial-gradient(circle at 50% 65%, var(--accent) 0%, transparent 55%);
-  opacity:.13;
-  filter:blur(46px);
-  animation:breathe 4.5s ease-in-out infinite;
-  transition:background 1s ease;
-  pointer-events:none;
-}
-@keyframes breathe{
-  0%,100%{opacity:.08; transform:scale(1);}
-  50%{opacity:.18; transform:scale(1.06);}
+  gap:0px;
+  padding:1px 0 0 0;
+  flex:1.2;
 }
 
 .gaugeWrap{
   position:relative;
-  width:min(92%,62vh);
+  width:100%;
+  max-width:66px;
   z-index:1;
   flex-shrink:0;
 }
 
-#gaugeSvg{width:100%; display:block; overflow:visible;}
+#gaugeSvg{
+  width:100%;
+  display:block;
+  overflow:visible;
+}
 
-.tick{ stroke:var(--text-dimmer); stroke-width:2; }
-.tickMajor{ stroke:var(--text-dim); stroke-width:3; }
+.tick{
+  stroke:var(--text-dimmer);
+  stroke-width:1.5;
+}
+
+.tickMajor{
+  stroke:var(--text-dim);
+  stroke-width:2;
+}
 
 .needle{
   transition: transform 1s cubic-bezier(.4,0,.2,1);
@@ -234,13 +228,13 @@ html,body{
   position:relative;
   z-index:1;
   text-align:center;
-  margin-top:clamp(-26px,-2.6vh,-4px);
+  margin-top:-6px;
 }
 
 #aqiValue{
   font-family:'Roboto Mono',monospace;
   font-weight:700;
-  font-size:clamp(78px,9.2vh,220px);
+  font-size:18px;
   line-height:.9;
   transition:color .6s ease, text-shadow .6s ease;
 }
@@ -248,69 +242,49 @@ html,body{
 #aqiCategory{
   font-family:'Space Grotesk',sans-serif;
   font-weight:700;
-  font-size:clamp(24px,2.2vw,44px);
+  font-size:5px;
   letter-spacing:.03em;
   text-transform:uppercase;
-  margin-top:12px;
+  margin-top:2px;
   transition:color .6s ease;
 }
 
 #aqiSub{
   font-family:'Roboto Mono',monospace;
-  font-size:clamp(16px,1.2vw,24px);
+  font-size:3.5px;
   color:var(--text-dim);
-  letter-spacing:.16em;
+  letter-spacing:.08em;
   text-transform:uppercase;
-  margin-top:14px;
+  margin-top:1px;
 }
 
-.gaugeLabel{
-  position:absolute;
-  top:20px; left:26px;
-  font-family:'Roboto Mono',monospace;
-  font-size:clamp(15px,1.05vw,20px);
-  letter-spacing:.26em;
-  color:var(--text-dim);
-  text-transform:uppercase;
-  z-index:2;
-}
-
-.gaugeScale{
-  position:absolute;
-  top:20px; right:26px;
-  font-family:'Roboto Mono',monospace;
-  font-size:clamp(15px,1.05vw,20px);
-  letter-spacing:.1em;
-  color:var(--text-dimmer);
-  text-transform:uppercase;
-  z-index:2;
-  text-align:right;
-}
-
-/* ---- rotating stat panel ---- */
+/* ---- stat panel ---- */
 
 .statPanel{
   display:flex;
   flex-direction:column;
-  padding:clamp(22px,2.6vw,44px);
+  padding:1px 2px;
   justify-content:center;
-  gap:clamp(6px,1vh,14px);
+  gap:0px;
+  flex:1;
 }
 
 .statLabel{
   display:flex;
   align-items:center;
-  gap:10px;
+  gap:4px;
   font-family:'Roboto Mono',monospace;
   font-weight:600;
-  font-size:clamp(19px,1.5vw,30px);
-  letter-spacing:.3em;
+  font-size:5px;
+  letter-spacing:.2em;
   color:var(--cyan);
   text-transform:uppercase;
 }
+
 .statLabel::before{
   content:"";
-  width:22px; height:2px;
+  width:10px;
+  height:1.5px;
   background:var(--cyan);
   flex-shrink:0;
 }
@@ -318,171 +292,46 @@ html,body{
 #statValue{
   font-family:'Roboto Mono',monospace;
   font-weight:700;
-  font-size:clamp(96px,13vh,280px);
+  font-size:18px;
   line-height:1;
 }
 
 #statDesc{
   font-family:'Space Grotesk',sans-serif;
   font-weight:500;
-  font-size:clamp(28px,2.4vw,42px);
+  font-size:5px;
   color:var(--text-dim);
   text-transform:capitalize;
+  white-space:nowrap;
+  overflow:hidden;
+  text-overflow:ellipsis;
 }
 
 .dots{
   display:flex;
-  gap:10px;
-  margin-top:clamp(14px,2vh,26px);
+  gap:2px;
+  margin-top:1px;
 }
+
 .dots span{
-  width:22px;height:6px;
+  width:8px;
+  height:2px;
   background:var(--line-dim);
   transition:background .3s ease, width .3s ease;
 }
+
 .dots span.active{
   background:var(--accent);
-  width:40px;
+  width:14px;
 }
 
-.fadeIn{ animation:fadeIn .6s ease; }
+.fadeIn{
+  animation:fadeIn .6s ease;
+}
+
 @keyframes fadeIn{
-  from{opacity:0; transform:translateY(14px);}
+  from{opacity:0; transform:translateY(4px);}
   to{opacity:1; transform:translateY(0);}
-}
-
-/* ============ TICKER ============ */
-
-.tickerBar{
-  flex-shrink:0;
-  border:1px solid var(--line-dim);
-  background:#04070A;
-  overflow:hidden;
-  display:flex;
-  align-items:center;
-  height:clamp(88px,11.5vh,144px);
-  position:relative;
-}
-
-.tickerTag{
-  flex-shrink:0;
-  height:100%;
-  display:flex;
-  align-items:center;
-  gap:10px;
-  padding:0 clamp(18px,2vw,32px);
-  background:rgba(45,212,191,.05);
-  border-right:1px solid var(--line);
-  font-family:'Roboto Mono',monospace;
-  font-weight:600;
-  font-size:clamp(19px,1.5vw,29px);
-  letter-spacing:.22em;
-  color:var(--cyan);
-  text-transform:uppercase;
-}
-.tickerTag .dot{width:8px;height:8px;background:var(--accent);}
-
-.tickerViewport{
-  flex:1;
-  overflow:hidden;
-  height:100%;
-  position:relative;
-}
-
-.tickerTrack{
-  display:flex;
-  align-items:center;
-  height:100%;
-  width:max-content;
-  animation:scrollTicker 30s linear infinite;
-}
-
-@keyframes scrollTicker{
-  from{transform:translateX(0);}
-  to{transform:translateX(-50%);}
-}
-
-.pollItem{
-  display:flex;
-  align-items:baseline;
-  gap:10px;
-  padding:0 clamp(20px,2.2vw,40px);
-  white-space:nowrap;
-}
-
-.pollItem .pName{
-  font-family:'Roboto Mono',monospace;
-  font-weight:700;
-  font-size:clamp(17px,1.5vw,26px);
-  color:var(--text-dim);
-  letter-spacing:.1em;
-}
-.pollItem .pVal{
-  font-family:'Roboto Mono',monospace;
-  font-weight:700;
-  font-size:clamp(21px,1.85vw,32px);
-  color:var(--amber);
-}
-.pollItem .pUnit{
-  font-family:'Roboto Mono',monospace;
-  font-size:clamp(13px,1vw,17px);
-  color:var(--text-dimmer);
-}
-
-.sep{
-  color:var(--text-dimmer);
-}
-
-/* ============ PORTRAIT / VERTICAL DISPLAY ============ */
-
-@media (orientation: portrait){
-
-  .stage{
-    gap:clamp(12px,1.6vh,24px);
-  }
-
-  .header{
-    flex-direction:column;
-    align-items:flex-start;
-    gap:clamp(10px,1.4vh,18px);
-  }
-
-  .header .status{
-    order:2;
-  }
-  .header .clockblock{
-    order:3;
-    text-align:left;
-  }
-
-  .brand .city{
-    font-size:clamp(44px,9vw,84px);
-  }
-
-  #clock{
-    font-size:clamp(44px,9vw,80px);
-  }
-
-  .hero{
-    grid-template-columns:1fr;
-    grid-template-rows:1.05fr 1fr;
-  }
-
-  .gaugeWrap{
-    width:min(85%,58vw);
-  }
-
-  #aqiValue{
-    font-size:clamp(70px,15vw,150px);
-  }
-
-  #statValue{
-    font-size:clamp(80px,17vw,170px);
-  }
-
-  .tickerTrack{
-    animation-duration:22s;
-  }
 }
 
 </style>
@@ -496,19 +345,17 @@ html,body{
   <div class="header">
     <div class="brand">
       <div class="stnRow">
-        <span class="stnId">STN · 01</span>
-        <span class="coords">11.9139°N 79.8145°E</span>
+        <span class="stnId">STN·01</span>
+        <span class="coords">11.9°N</span>
       </div>
       <div class="city">Puducherry</div>
-      <div class="eyebrow">Air Quality Monitor</div>
     </div>
-    <div class="status" id="statusRow">
-      <span class="dot"></span>
-      <span id="statusText">Live</span>
-    </div>
-    <div class="clockblock">
+    <div class="status-clock">
+      <div class="status" id="statusRow">
+        <span class="dot"></span>
+        <span id="statusText">Live</span>
+      </div>
       <div id="clock">--:--</div>
-      <div id="datestr">Loading...</div>
     </div>
   </div>
 
@@ -518,22 +365,18 @@ html,body{
     <!-- GAUGE -->
     <div class="panel gaugePanel">
       <span class="brkA"></span><span class="brkB"></span>
-      <div class="gaugeGlow" id="gaugeGlow"></div>
-      <div class="gaugeLabel">AQI</div>
-      <div class="gaugeScale">0 — 500<br>PM2.5 basis</div>
-
       <div class="gaugeWrap">
         <svg id="gaugeSvg" viewBox="0 0 400 240">
           <g id="gaugeTicks"></g>
           <g id="gaugeZones"></g>
-          <line id="needle" class="needle" x1="200" y1="200" x2="200" y2="58" stroke="#EAF3F0" stroke-width="4" stroke-linecap="round"/>
-          <circle cx="200" cy="200" r="9" fill="#EAF3F0"/>
-          <circle cx="200" cy="200" r="9" fill="none" stroke="var(--cyan)" stroke-width="2"/>
+          <line id="needle" class="needle" x1="200" y1="200" x2="200" y2="58" stroke="#EAF3F0" stroke-width="5" stroke-linecap="round"/>
+          <circle cx="200" cy="200" r="8" fill="#EAF3F0"/>
+          <circle cx="200" cy="200" r="8" fill="none" stroke="var(--cyan)" stroke-width="2"/>
         </svg>
         <div class="gaugeReadout">
           <div id="aqiValue">--</div>
           <div id="aqiCategory">Connecting</div>
-          <div id="aqiSub">PM2.5 -- µg/m³</div>
+          <div id="aqiSub">PM2.5 --</div>
         </div>
       </div>
     </div>
@@ -549,16 +392,6 @@ html,body{
 
   </div>
 
-  <!-- TICKER -->
-  <div class="tickerBar">
-    <div class="tickerTag"><span class="dot"></span>Pollutants</div>
-    <div class="tickerViewport">
-      <div class="tickerTrack" id="tickerTrack">
-        <!-- populated by JS, duplicated once for seamless loop -->
-      </div>
-    </div>
-  </div>
-
 </div>
 
 <script>
@@ -568,17 +401,15 @@ const city = "Puducherry";
 
 let stats = [];
 let statIndex = 0;
-let lastGood = null;
 
 /* ============ CLOCK ============ */
 
 function updateClock(){
   const now = new Date();
   document.getElementById("clock").innerText = now.toLocaleTimeString('en-US',{hour:'2-digit',minute:'2-digit',hour12:true});
-  document.getElementById("datestr").innerText = now.toLocaleDateString('en-US',{weekday:'long',day:'2-digit',month:'long',year:'numeric'});
 }
 
-/* ============ AQI GAUGE (US EPA scale, from PM2.5) ============ */
+/* ============ AQI GAUGE ============ */
 
 const ZONES = [
   {from:0,   to:50,  color:"#34D399"},
@@ -590,12 +421,12 @@ const ZONES = [
 ];
 
 const CATS = [
-  {max:50,  label:"Good",                         color:"#34D399"},
-  {max:100, label:"Moderate",                      color:"#FDE047"},
-  {max:150, label:"Unhealthy (Sensitive Groups)",  color:"#FB923C"},
-  {max:200, label:"Unhealthy",                     color:"#F87171"},
-  {max:300, label:"Very Unhealthy",                color:"#C084FC"},
-  {max:500, label:"Hazardous",                     color:"#EF4444"},
+  {max:50,  label:"Good", color:"#34D399"},
+  {max:100, label:"Moderate", color:"#FDE047"},
+  {max:150, label:"Sensitive", color:"#FB923C"},
+  {max:200, label:"Unhealthy", color:"#F87171"},
+  {max:300, label:"Very Unhealthy", color:"#C084FC"},
+  {max:500, label:"Hazardous", color:"#EF4444"},
 ];
 
 function polar(cx,cy,r,angleDeg){
@@ -650,7 +481,6 @@ function categoryFor(aqi){
   return CATS.find(c=>aqi<=c.max) || CATS[CATS.length-1];
 }
 
-/* EPA breakpoint formula, PM2.5 (µg/m³) -> US AQI (0-500) */
 function pm25ToAQI(pm){
   const bp = [
     [0.0,12.0,0,50],
@@ -672,13 +502,13 @@ function pm25ToAQI(pm){
 
 function updateGauge(aqi, pm25){
   const clamped = Math.min(aqi,500);
-  const angle = (clamped/500)*180 - 90; // needle rotation relative to vertical (up = AQI 250)
+  const angle = (clamped/500)*180 - 90;
   document.getElementById("needle").style.transform = `rotate(${angle}deg)`;
 
   const cat = categoryFor(clamped);
   document.getElementById("aqiValue").innerText = aqi;
   document.getElementById("aqiValue").style.color = cat.color;
-  document.getElementById("aqiValue").style.textShadow = `0 0 34px ${cat.color}77`;
+  document.getElementById("aqiValue").style.textShadow = `0 0 14px ${cat.color}55`;
   document.getElementById("aqiCategory").innerText = cat.label;
   document.getElementById("aqiCategory").style.color = cat.color;
   document.getElementById("aqiSub").innerText = `PM2.5 ${pm25} µg/m³`;
@@ -717,54 +547,13 @@ function rotateStats(){
   statIndex = (statIndex+1) % stats.length;
 }
 
-/* ============ TICKER ============ */
-
-function buildTicker(components){
-  const items = [
-    {name:"PM2.5", key:"pm2_5"},
-    {name:"PM10",  key:"pm10"},
-    {name:"NO2",   key:"no2"},
-    {name:"SO2",   key:"so2"},
-    {name:"CO",    key:"co"},
-    {name:"O3",    key:"o3"},
-    {name:"NH3",   key:"nh3"},
-  ];
-
-  const track = document.getElementById("tickerTrack");
-  track.innerHTML = "";
-
-  const renderSet = ()=>{
-    const frag = document.createDocumentFragment();
-    items.forEach((it,i)=>{
-      const div = document.createElement("div");
-      div.className = "pollItem";
-      div.innerHTML = `<span class="pName">${it.name}</span><span class="pVal">${components[it.key]?.toFixed(1) ?? "--"}</span><span class="pUnit">µg/m³</span>`;
-      frag.appendChild(div);
-      if(i < items.length-1){
-        const sep = document.createElement("span");
-        sep.className = "sep";
-        sep.innerText = "·";
-        frag.appendChild(sep);
-      }
-    });
-    return frag;
-  };
-
-  track.appendChild(renderSet());
-  const sepEnd = document.createElement("span");
-  sepEnd.className = "sep";
-  sepEnd.innerText = "·";
-  track.appendChild(sepEnd);
-  track.appendChild(renderSet());
-}
-
 /* ============ STATUS ============ */
 
 function setStatus(online){
   const row = document.getElementById("statusRow");
   const text = document.getElementById("statusText");
   row.classList.toggle("offline", !online);
-  text.innerText = online ? "Live" : "Reconnecting";
+  text.innerText = online ? "Live" : "Off";
 }
 
 /* ============ FETCH ============ */
@@ -789,31 +578,27 @@ async function getWeather(){
     const temp = Math.round(data.main.temp);
     const feels = Math.round(data.main.feels_like);
     const humidity = data.main.humidity;
-    const wind = Math.round(data.wind.speed * 3.6); // m/s -> km/h
+    const wind = Math.round(data.wind.speed * 3.6);
     const visibility = (data.visibility/1000).toFixed(1);
     const sunrise = new Date(data.sys.sunrise*1000).toLocaleTimeString('en-US',{hour:'2-digit',minute:'2-digit',hour12:true});
     const sunset  = new Date(data.sys.sunset*1000).toLocaleTimeString('en-US',{hour:'2-digit',minute:'2-digit',hour12:true});
 
     stats = [
-      {label:"Temperature", value: temp+"°C", desc: `${data.weather[0].description} · feels ${feels}°C`},
-      {label:"Humidity",    value: humidity+"%", desc: "Relative humidity"},
-      {label:"Wind Speed",  value: wind+" km/h", desc: data.wind.deg!==undefined ? `Direction ${data.wind.deg}°` : "Surface wind"},
-      {label:"Visibility",  value: visibility+" km", desc: "Ground visibility"},
-      {label:"Sunrise",     value: sunrise, desc: "Local sunrise time"},
-      {label:"Sunset",      value: sunset, desc: "Local sunset time"},
+      {label:"Temp", value: temp+"°C", desc: `${data.weather[0].description} · ${feels}°C`},
+      {label:"Humid", value: humidity+"%", desc: "Relative humidity"},
+      {label:"Wind", value: wind+" km/h", desc: `Dir ${data.wind.deg||0}°`},
+      {label:"Vis", value: visibility+" km", desc: "Ground visibility"},
+      {label:"Sunrise", value: sunrise, desc: "Sunrise time"},
+      {label:"Sunset", value: sunset, desc: "Sunset time"},
     ];
 
     buildDots();
     updateGauge(usAqi, pm25.toFixed(1));
-    buildTicker(components);
     setStatus(true);
-
-    lastGood = {stats, components};
 
   }catch(err){
     console.log("Fetch error:", err);
     setStatus(false);
-    // keep last known good data on screen; do nothing further
   }
 }
 
